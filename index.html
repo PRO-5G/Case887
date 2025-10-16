@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Case School887 alpha 0.1</title>
+<style>
+  body {
+    font-family: "Segoe UI", sans-serif;
+    background: linear-gradient(135deg,#e8ebf0,#ffffff);
+    margin: 0;
+    padding: 0;
+    color: #222;
+  }
+  header {
+    background: #1c1c1c;
+    color: #fff;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  header h1 { font-size: 1.4rem; margin: 0; }
+  #balance { font-weight: bold; }
+
+  main { padding: 2rem; text-align: center; }
+
+  .cases {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+  .case {
+    background: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    width: 240px;
+    padding: 1.5rem;
+    transition: transform 0.2s;
+  }
+  .case:hover { transform: translateY(-5px); }
+  .case h2 { margin-bottom: .5rem; }
+  .price {
+    color: #007bff;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+  button {
+    background: #007bff;
+    border: none;
+    color: #fff;
+    padding: .7rem 1.2rem;
+    border-radius: .6rem;
+    cursor: pointer;
+    transition: background .2s;
+  }
+  button:hover { background: #005ecb; }
+
+  /* Рулетка */
+  #rouletteContainer {
+    margin-top: 3rem;
+    overflow: hidden;
+    border: 3px solid #007bff;
+    border-radius: 1rem;
+    background: #f5f6f7;
+    height: 160px;
+    position: relative;
+  }
+  #roulette {
+    display: flex;
+    transition: transform 4s cubic-bezier(.17,.67,.83,.67);
+  }
+  .teacher {
+    width: 140px;
+    height: 140px;
+    background: #dfe3e9;
+    margin: 10px;
+    border-radius: .7rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: .9rem;
+  }
+  .teacher img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    border-radius: .5rem;
+  }
+
+  /* Цвета редкостей */
+  .common { border: 3px solid #9ea5b1; }
+  .rare { border: 3px solid #3a9df8; }
+  .epic { border: 3px solid #b548f3; }
+  .legendary { border: 3px solid #f3b23a; }
+  .secret { border: 3px solid #e63a3a; }
+
+  #result {
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Case School887 alpha 0.1</h1>
+  <div>Баланс: <span id="balance">1000</span> пятёрок</div>
+</header>
+
+<main>
+  <div class="cases">
+    <div class="case">
+      <h2>Буфет</h2>
+      <div class="price">49 пятёрок</div>
+      <button onclick="openCase('bufet',49)">Открыть</button>
+    </div>
+    <div class="case">
+      <h2>Шпаргалка</h2>
+      <div class="price">149 пятёрок</div>
+      <button onclick="openCase('shpargalka',149)">Открыть</button>
+    </div>
+    <div class="case">
+      <h2>Опять 2 (лимитный)</h2>
+      <div class="price">499 пятёрок</div>
+      <button onclick="openCase('opyat2',499)">Открыть</button>
+    </div>
+  </div>
+
+  <div id="rouletteContainer">
+    <div id="roulette"></div>
+  </div>
+
+  <div id="result"></div>
+</main>
+
+<script>
+const teachers = [
+  {name:"Учитель 1", rarity:"common", img:"placeholder1.jpg"},
+  {name:"Учитель 2", rarity:"common", img:"placeholder2.jpg"},
+  {name:"Учитель 3", rarity:"common", img:"placeholder3.jpg"},
+  {name:"Учитель 4", rarity:"common", img:"placeholder4.jpg"},
+  {name:"Учитель 5", rarity:"rare", img:"placeholder5.jpg"},
+  {name:"Учитель 6", rarity:"rare", img:"placeholder6.jpg"},
+  {name:"Учитель 7", rarity:"rare", img:"placeholder7.jpg"},
+  {name:"Учитель 8", rarity:"epic", img:"placeholder8.jpg"},
+  {name:"Учитель 9", rarity:"epic", img:"placeholder9.jpg"},
+  {name:"Учитель 10", rarity:"legendary", img:"placeholder10.jpg"},
+  {name:"Учитель 11", rarity:"secret", img:"placeholder11.jpg"}
+];
+
+const rarityChances = {
+  common: 0.5,
+  rare: 0.25,
+  epic: 0.15,
+  legendary: 0.07,
+  secret: 0.03
+};
+
+let balance = 1000;
+const balEl = document.getElementById('balance');
+const roulette = document.getElementById('roulette');
+const resultEl = document.getElementById('result');
+
+function getRandomTeacher(caseType) {
+  let pool = [...teachers];
+  if (caseType === "opyat2") {
+    // убираем обычных в лимитном кейсе
+    pool = pool.filter(t => t.rarity !== "common");
+  }
+  const roll = Math.random();
+  let cumulative = 0;
+  for (const [rarity, chance] of Object.entries(rarityChances)) {
+    cumulative += chance;
+    if (roll <= cumulative) {
+      const same = pool.filter(t => t.rarity === rarity);
+      return same[Math.floor(Math.random() * same.length)];
+    }
+  }
+  return pool[0];
+}
+
+function openCase(type, cost) {
+  if (balance < cost) {
+    alert("Недостаточно пятёрок!");
+    return;
+  }
+  balance -= cost;
+  balEl.textContent = balance;
+
+  roulette.innerHTML = "";
+  resultEl.textContent = "";
+
+  // генерируем список для прокрутки
+  const sequence = [];
+  for (let i=0;i<30;i++){
+    const t = teachers[Math.floor(Math.random()*teachers.length)];
+    sequence.push(t);
+  }
+  const winner = getRandomTeacher(type);
+  sequence.push(winner);
+
+  sequence.forEach(t=>{
+    const div=document.createElement('div');
+    div.className=`teacher ${t.rarity}`;
+    div.innerHTML=`<img src="${t.img}" alt=""><span>${t.name}</span>`;
+    roulette.appendChild(div);
+  });
+
+  // Запускаем анимацию
+  const itemWidth=160;
+  const endIndex=sequence.length-1;
+  const distance=(endIndex-3)*itemWidth;
+  roulette.style.transition="none";
+  roulette.style.transform="translateX(0)";
+  setTimeout(()=>{
+    roulette.style.transition="transform 4s cubic-bezier(.17,.67,.83,.67)";
+    roulette.style.transform=`translateX(-${distance}px)`;
+  },50);
+
+  setTimeout(()=>{
+    resultEl.textContent=`Выпал: ${winner.name} (${winner.rarity})`;
+  },4100);
+}
+</script>
+
+</body>
+</html>
