@@ -108,7 +108,7 @@
 
 <header>
   <h1>Case School887 alpha 0.1</h1>
-  <div>Баланс: <span id="balance">1000</span> пятёрок</div>
+  <div>Баланс: <span id="balance">10000</span> пятёрок</div>
 </header>
 
 <main>
@@ -139,17 +139,17 @@
 
 <script>
 const teachers = [
-  {name:"Учитель 1", rarity:"common", img:"placeholder1.jpg"},
-  {name:"Учитель 2", rarity:"common", img:"placeholder2.jpg"},
-  {name:"Учитель 3", rarity:"common", img:"placeholder3.jpg"},
-  {name:"Учитель 4", rarity:"common", img:"placeholder4.jpg"},
-  {name:"Учитель 5", rarity:"rare", img:"placeholder5.jpg"},
-  {name:"Учитель 6", rarity:"rare", img:"placeholder6.jpg"},
-  {name:"Учитель 7", rarity:"rare", img:"placeholder7.jpg"},
-  {name:"Учитель 8", rarity:"epic", img:"placeholder8.jpg"},
-  {name:"Учитель 9", rarity:"epic", img:"placeholder9.jpg"},
-  {name:"Учитель 10", rarity:"legendary", img:"placeholder10.jpg"},
-  {name:"Учитель 11", rarity:"secret", img:"placeholder11.jpg"}
+  {name:"Юлия Семёнона", rarity:"common", img:"1.jpg"},
+  {name:"Владислав Вячеславович", rarity:"common", img:"2.jpg"},
+  {name:"Глаина Борисовна", rarity:"common", img:"3.jpg"},
+  {name:"Ульяна Валерьевна", rarity:"common", img:"4.jpg"},
+  {name:"Татьяна Владимировна", rarity:"rare", img:"5.jpg"},
+  {name:"Александр Владимирович", rarity:"rare", img:"6.jpg"},
+  {name:"Андриан Евгеньевич", rarity:"rare", img:"7.jpg"},
+  {name:"Кира Феликсовна", rarity:"epic", img:"8.jpg"},
+  {name:"Евгения Николаевна", rarity:"epic", img:"9.jpg"},
+  {name:"Ольга Александровна", rarity:"legendary", img:"10.jpg"},
+  {name:"Юлия Васильевна", rarity:"secret", img:"11.jpg"}
 ];
 
 const rarityChances = {
@@ -160,7 +160,7 @@ const rarityChances = {
   secret: 0.03
 };
 
-let balance = 1000;
+let balance = 10000;
 const balEl = document.getElementById('balance');
 const roulette = document.getElementById('roulette');
 const resultEl = document.getElementById('result');
